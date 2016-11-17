@@ -1,0 +1,22 @@
+<ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+          <h1 class="title">Settings</h1>
+          <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+        </ion-header-bar>
+        <ion-content class="padding">
+                      
+              <label class="item item-input">
+                Range:
+                <center><span class="col col-50">{{rangeValue}} Miles</span></center>
+              </label>
+
+              <div class="card text-center">
+                <i class="icon ion-minus-circled"></i>
+                <input type="range" min="0" max="20" step="2" ng-model="rangeValue"> 
+                <i class="icon ion-plus-circled"></i>
+              </div>
+
+              <center><button align="center" ng-click="update(rangeValue)">Set Values</button></center>
+
+        </ion-content>
+      </ion-modal-view>

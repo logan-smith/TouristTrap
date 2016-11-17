@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, SettingsUpdate) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -9,11 +9,35 @@ angular.module('starter.controllers', [])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  
-  
+
+  $ionicModal.fromTemplateUrl('templates/modal.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+  });  
+
+  $scope.rangeValue = "8";
+
+  $scope.update = function(value) {
+    SettingsUpdate.setRangeValue(value);
+    $scope.modal.hide();
+  };
+
+  $scope.openModal = function() {
+    $scope.modal.show();
+  };
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+  // Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
 })
 
-.controller('MapCtrl', function($scope, $ionicLoading) {
+.controller('MapCtrl', function($scope, $ionicLoading, SettingsUpdate) {
 
     $scope.initialise = function() {
 
@@ -29,18 +53,17 @@ angular.module('starter.controllers', [])
             panControl: true,
             scaleControl:true,
             rotateControl: true
-            
         };
 
         var map = new google.maps.Map(document.getElementById("map"), mapOptions);
         
+        //Times 1500 to account for whatever weird units google expects.
+        $scope.rangeValue = 1500*parseFloat(SettingsUpdate.getRangeValue());
+
         var scanRadiusDisplay = new google.maps.Circle(
             {
                 center: mapOptions.myLatlng,
-                //the radius is just a hard coded number for now
-                //this will eventually be linked to the settings the user
-                //adjusted to
-                radius: 900,
+                radius: $scope.rangeValue,
                 strokeColor: "#008000",
                 strokeOpacity: 0.9,
                 strokeWeight: 1,
@@ -48,7 +71,7 @@ angular.module('starter.controllers', [])
                 fillOpacity: 0.2
             });
             
-            scanRadiusDisplay.setMap(map);
+        scanRadiusDisplay.setMap(map);
             
 
         navigator.geolocation.getCurrentPosition(function(pos) {
@@ -66,6 +89,10 @@ angular.module('starter.controllers', [])
     };
     
     google.maps.event.addDomListener(document.getElementById("map"), 'load', $scope.initialise());
-    
+
+    $scope.$on('eventFired', function(event, data) {
+        $scope.initialise();
+    })
 
 });
+
