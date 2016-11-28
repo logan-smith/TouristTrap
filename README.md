@@ -7,3 +7,10 @@
 >		Rest of the Settings (Whatever we decide they may be).
 >		Get test locations.
 >		Start implementation of "Filtering" based on test locations.
+
+
+
+
+>>> Max Number Items Displayed
+>>> Move Settings button to Top Right bar
+>>> Start app from map with modal over
